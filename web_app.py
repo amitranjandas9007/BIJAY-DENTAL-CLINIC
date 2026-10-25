@@ -1,0 +1,245 @@
+from flask import Flask, render_template_string, request
+from pathlib import Path
+import json
+
+app = Flask(__name__)
+
+BASE_DIR = Path(__file__).resolve().parent
+KNOWLEDGE_FILE = BASE_DIR / "knowledge_base.json"
+
+with open(KNOWLEDGE_FILE, "r", encoding="utf-8") as file:
+    clinic = json.load(file)
+
+HTML_PAGE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bijay Dental Clinic | AI Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #eef4ff);
+            color: #243447;
+            min-height: 100vh;
+            padding: 40px 15px;
+        }
+
+        .box {
+            background: white;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(0, 70, 100, 0.12);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #087e8b;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 10px;
+        }
+
+        .description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #087e8b;
+        }
+
+        button {
+            padding: 15px 25px;
+            background: #087e8b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #066570;
+        }
+
+        .answer {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e8f8f5;
+            border-left: 5px solid #087e8b;
+            border-radius: 10px;
+            text-align: left;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 500px) {
+            .box {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="icon">🦷</div>
+
+        <h1>BIJAY DENTAL CLINIC</h1>
+        <h3>AI Dental Assistant</h3>
+
+        <p class="description">
+            Welcome! Ask our AI assistant about clinic timings,
+            location, consultation fees, and dental treatments.
+        </p>
+
+        <form method="POST">
+            <input
+                type="text"
+                name="question"
+                placeholder="Type your question here..."
+                required
+            >
+            <button type="submit">Ask Now</button>
+        </form>
+<h2>📅 Book an Appointment</h2>
+
+<form method="POST">
+    <input type="hidden" name="booking" value="yes">
+
+    <input type="text" name="patient_name"
+           placeholder="Your full name" required>
+
+    <input type="tel" name="phone"
+           placeholder="Your phone number" required>
+
+    <input type="date" name="appointment_date" required>
+
+    <input type="time" name="appointment_time" required>
+
+    <input type="text" name="reason"
+           placeholder="Reason for visit" required>
+
+    <button type="submit">Request Appointment</button>
+</form>
+        {% if answer %}
+            <div class="answer">
+                <strong>🤖 AI Assistant:</strong>
+                <p>{{ answer }}</p>
+            </div>
+        {% endif %}
+
+        <div class="footer">
+            Your dental care matters to us.
+            <br>
+            For emergencies, contact the clinic directly.
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+    answer = ""
+
+    if request.method == "POST":
+
+      if request.form.get("booking") == "yes":
+        name = request.form.get("patient_name", "")
+        phone = request.form.get("phone", "")
+        date = request.form.get("appointment_date", "")
+        time = request.form.get("appointment_time", "")
+        reason = request.form.get("reason", "")
+
+        answer = (
+            f"Thank you, {name}. Your appointment request "
+            f"for {date} at {time} has been received. "
+            "Please wait for confirmation from the clinic."
+        )
+
+    else:
+        question = request.form.get("question", "").lower()
+
+        if "timing" in question or "time" in question or "open" in question:
+            answer = str(clinic.get("timings", "Please contact the clinic for timings."))
+
+        elif "address" in question or "location" in question or "where" in question:
+            answer = str(clinic.get("address", "Please contact the clinic for the address."))
+
+        elif "fee" in question or "price" in question or "cost" in question or "charge" in question:
+            answer = str(clinic.get("consultation_fee", "Please contact the clinic for fees."))
+
+        elif "emergency" in question or "urgent" in question:
+            answer = "For a dental emergency, please contact the clinic directly. If you have severe swelling, difficulty breathing, or uncontrolled bleeding, seek urgent medical care."
+
+        elif "appointment" in question or "book" in question:
+            answer = "To request an appointment, please contact the clinic directly. Appointment booking through this website is not available yet."
+
+        elif "service" in question or "treatment" in question or "cleaning" in question or "root canal" in question or "braces" in question or "whitening" in question or "filling" in question:
+            services = clinic.get("services", [])
+            answer = ", ".join(services) if isinstance(services, list) else str(services)
+
+        else:
+            answer = "Sorry, I don't have that information yet. Please contact the clinic staff."
+
+    return render_template_string(HTML_PAGE, answer=answer)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)

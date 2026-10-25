@@ -1,0 +1,18 @@
+{
+  "clinic_name": "BIJAY DENTAL CLINIC",
+  "address": "86,Chander Village Road,Near Jalaram Mandir,Kolkata, West Bengal 700082",
+  "timings": "Monday to Saturday, 12 PM to 9 PM",
+  "services": [
+    "Tooth Cleaning",
+    "Fluoride Treatments and Sealants",
+    "Fillings",
+    "Crowns and Bridges",
+    "Root Canal Treatment",
+    "Gum Disease Treatment",
+    "Braces and Clear Aligners",
+    "Teeth Whitening",
+    "Veneers and Dental Bonding",
+    "Minor Surgical Procedures"
+  ],
+  "consultation_fee": "500 INR"
+}
