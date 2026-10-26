@@ -247,7 +247,7 @@ def home():
             answer = str(clinic.get("address", "Please contact the clinic for the address."))
 
         elif any(word in question for word in ["fee", "price", "cost", "charge", "consultation"]):
-           answer = f"The consultation fee at Bijay Dental Clinic is {clinic.get('consultation_fee', '₹500')}."
+            answer = f"Our consultation fee is {clinic.get('consultation_fee', '₹500')}."
         elif "emergency" in question or "urgent" in question:
             answer = "For a dental emergency, please contact the clinic directly. If you have severe swelling, difficulty breathing, or uncontrolled bleeding, seek urgent medical care."
 
