@@ -178,11 +178,14 @@ HTML_PAGE = """
     <button type="submit">Request Appointment</button>
 </form>
         {% if answer %}
-            <div class="answer">
-                <strong>🤖 AI Assistant:</strong>
-                <p>{{ answer }}</p>
-            </div>
-        {% endif %}
+    <div class="answer">
+        <strong>AI Dental Assistant:</strong>
+        <p id="answerText">{{ answer }}</p>
+        <button type="button" onclick="speakAnswer()">
+            🔊 Speak Again
+        </button>
+    </div>
+{% endif %}
 
         <div class="footer">
             Your dental care matters to us.
@@ -190,6 +193,27 @@ HTML_PAGE = """
             For emergencies, contact the clinic directly.
         </div>
     </div>
+    <script>
+function speakAnswer() {
+    const answer = document.getElementById("answerText");
+
+    if (!answer) return;
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(answer.innerText);
+    speech.lang = "en-IN";
+    speech.rate = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+window.addEventListener("load", function() {
+    if (document.getElementById("answerText")) {
+        speakAnswer();
+    }
+});
+</script>
 </body>
 </html>
 """
