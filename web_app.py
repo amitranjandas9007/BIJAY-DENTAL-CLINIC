@@ -224,45 +224,88 @@ def home():
 
     if request.method == "POST":
 
-      if request.form.get("booking") == "yes":
-        name = request.form.get("patient_name", "")
-        phone = request.form.get("phone", "")
-        date = request.form.get("appointment_date", "")
-        time = request.form.get("appointment_time", "")
-        reason = request.form.get("reason", "")
+        # Handle appointment requests
+        if request.form.get("booking") == "yes":
+            name = request.form.get("patient_name", "")
+            date = request.form.get("appointment_date", "")
+            time = request.form.get("appointment_time", "")
 
-        answer = (
-            f"Thank you, {name}. Your appointment request "
-            f"for {date} at {time} has been received. "
-            "Please wait for confirmation from the clinic."
-        )
+            answer = (
+                f"Thank you, {name}. Your appointment request "
+                f"for {date} at {time} has been received. "
+                "Please wait for confirmation from the clinic."
+            )
 
-    else:
-        question = request.form.get("question", "").lower()
-
-        if "timing" in question or "time" in question or "open" in question:
-            answer = str(clinic.get("timings", "Please contact the clinic for timings."))
-
-        elif "address" in question or "location" in question or "where" in question:
-            answer = str(clinic.get("address", "Please contact the clinic for the address."))
-
-        elif any(word in question for word in ["fee", "price", "cost", "charge", "consultation"]):
-            answer = f"Our consultation fee is {clinic.get('consultation_fee', '₹500')}."
-        elif "emergency" in question or "urgent" in question:
-            answer = "For a dental emergency, please contact the clinic directly. If you have severe swelling, difficulty breathing, or uncontrolled bleeding, seek urgent medical care."
-
-        elif "appointment" in question or "book" in question:
-            answer = "To request an appointment, please contact the clinic directly. Appointment booking through this website is not available yet."
-
-        elif "service" in question or "treatment" in question or "cleaning" in question or "root canal" in question or "braces" in question or "whitening" in question or "filling" in question:
-            services = clinic.get("services", [])
-            answer = ", ".join(services) if isinstance(services, list) else str(services)
-
+        # Handle questions from the Ask Now form
         else:
-            answer = "Sorry, I don't have that information yet. Please contact the clinic staff."
+            question = request.form.get("question", "").strip().lower()
+
+            if not question:
+                answer = "Please type a question."
+
+            elif any(word in question for word in [
+                "fee", "price", "cost", "charge",
+                "consultation", "500", "rupee", "rupees"
+            ]):
+                answer = (
+                    f"Our consultation fee is "
+                    f"{clinic.get('consultation_fee', '500 INR')}."
+                )
+
+            elif any(word in question for word in [
+                "timing", "time", "open", "hours", "close"
+            ]):
+                answer = str(
+                    clinic.get(
+                        "timings",
+                        "Please contact the clinic for timings."
+                    )
+                )
+
+            elif any(word in question for word in [
+                "address", "location", "where", "direction"
+            ]):
+                answer = str(
+                    clinic.get(
+                        "address",
+                        "Please contact the clinic for its address."
+                    )
+                )
+
+            elif any(word in question for word in [
+                "emergency", "urgent", "pain", "swelling"
+            ]):
+                answer = (
+                    "For a dental emergency, please contact the clinic "
+                    "directly. If you have difficulty breathing, severe "
+                    "swelling, or uncontrolled bleeding, seek urgent "
+                    "medical care."
+                )
+
+            elif any(word in question for word in [
+                "service", "treatment", "cleaning", "root canal",
+                "braces", "whitening", "filling", "crown", "gum"
+            ]):
+                services = clinic.get("services", [])
+                answer = (
+                    ", ".join(services)
+                    if isinstance(services, list)
+                    else str(services)
+                )
+
+            elif "appointment" in question or "book" in question:
+                answer = (
+                    "Please complete the appointment form below "
+                    "to request an appointment."
+                )
+
+            else:
+                answer = (
+                    "Sorry, I don't have that information yet. "
+                    "Please contact the clinic staff."
+                )
 
     return render_template_string(HTML_PAGE, answer=answer)
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
