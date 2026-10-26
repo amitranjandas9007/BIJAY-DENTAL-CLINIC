@@ -109,7 +109,55 @@ HTML_PAGE = """
             line-height: 1.7;
             overflow-wrap: anywhere;
         }
+        .services-section {
+    margin-top: 35px;
+    text-align: left;
+}
 
+.services-section h2 {
+    color: #087e8b;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.services-intro {
+    text-align: center;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.service-card {
+    padding: 18px;
+    background: #f0fafa;
+    border: 1px solid #d4eeee;
+    border-radius: 12px;
+}
+
+.service-card h3 {
+    color: #087e8b;
+    margin-top: 0;
+    font-size: 17px;
+}
+
+.service-card p {
+    color: #475569;
+    line-height: 1.6;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+@media (max-width: 500px) {
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
         .footer {
             margin-top: 25px;
             color: #64748b;
@@ -157,6 +205,98 @@ HTML_PAGE = """
             >
             <button type="submit">Ask Now</button>
         </form>
+<section class="services-section">
+    <h2>🦷 Our Dental Services</h2>
+
+    <p class="services-intro">
+        Complete dental care for a healthy, confident smile.
+        Explore our treatments and contact us to discuss your needs.
+    </p>
+
+    <div class="services-grid">
+
+        <div class="service-card">
+            <h3>🪥 1. Teeth Cleaning</h3>
+            <p>
+                Professional cleaning removes plaque, tartar and
+                surface stains, helping maintain healthy teeth and gums.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>✨ 2. Fluoride & Sealants</h3>
+            <p>
+                Fluoride helps strengthen tooth enamel, while dental
+                sealants protect the grooves of teeth from cavities.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>🦷 3. Dental Fillings</h3>
+            <p>
+                Fillings repair teeth damaged by cavities and help
+                restore their normal shape and function.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>👑 4. Crowns & Bridges</h3>
+            <p>
+                Crowns protect weakened or damaged teeth. Bridges
+                can replace missing teeth and restore chewing function.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>🩺 5. Root Canal Treatment</h3>
+            <p>
+                Root canal treatment removes infected or inflamed
+                tissue inside a tooth to help preserve the natural tooth.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>🌿 6. Gum Disease Treatment</h3>
+            <p>
+                Treatment helps manage gum inflammation, bleeding
+                and other gum problems following a dental examination.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>😁 7. Braces & Clear Aligners</h3>
+            <p>
+                Orthodontic treatments gradually move teeth into
+                better positions and can improve bite alignment.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>✨ 8. Teeth Whitening</h3>
+            <p>
+                Professional whitening can reduce certain stains
+                and make teeth appear brighter.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>💎 9. Veneers & Dental Bonding</h3>
+            <p>
+                These cosmetic treatments can improve the appearance
+                of selected teeth, including minor chips and gaps.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <h3>🏥 10. Minor Dental Surgery</h3>
+            <p>
+                Selected minor surgical procedures may be available
+                following an examination and treatment recommendation.
+            </p>
+        </div>
+
+    </div>
+</section>
 <h2>📅 Book an Appointment</h2>
 
 <form method="POST">
